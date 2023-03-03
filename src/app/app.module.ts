@@ -18,6 +18,14 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
+// firestore
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { environment } from '../environments/environment';
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +43,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+
+
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideAuth( () => getAuth() )
 
