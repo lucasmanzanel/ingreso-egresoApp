@@ -9,13 +9,16 @@ import { AuthService } from './auth.service';
 export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
-  canActivate(): Observable<boolean> {
-    return this.authService.isAuth().pipe(
-      tap((isAuth) => {
-        console.log('ESTO',isAuth)
-        if (!isAuth) this.router.navigate(['login']);
-      })
-    );
+  // canActivate(): Observable<boolean> | Observable <boolean> | UrlTree | Promise<boolean | UrlTree> | boolean | UrlTree {
+  //   return this.authService.isAuth().pipe(
+  //     tap((isAuth) => {
+  //       if (!isAuth) this.router.navigate(['login']);
+  //     })
+  //   );
+  // }
+
+  canActivate():Observable <boolean> | UrlTree | Promise<boolean | UrlTree> | boolean | UrlTree{
+    return this.authService.isAuth()
   }
 
   

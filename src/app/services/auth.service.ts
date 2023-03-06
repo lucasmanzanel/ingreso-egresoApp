@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, Observable } from 'rxjs';
 
-import {authState, beforeAuthStateChanged} from '@angular/fire/auth';
+import {authState} from '@angular/fire/auth';
+import { UsuarioI } from '../models/usuario.models';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -12,7 +15,12 @@ export class AuthService {
 
   currentUser;
 
-  constructor(public auth:AngularFireAuth) { }
+  constructor(
+    public auth:AngularFireAuth,
+    public firestore:AngularFirestore,
+    private router:Router
+    
+    ) { }
 
 
   initAuthListener(){
@@ -20,7 +28,7 @@ export class AuthService {
     this.auth.authState.subscribe( fUser => {
 
       this.currentUser = fUser
-      console.log(fUser)
+      console.log(this.currentUser)
       // console.log(fUser?.uid)
       // console.log(fUser?.email)
 
@@ -33,6 +41,13 @@ export class AuthService {
 
   createUser(nombre:string,email:string,password:string){
     return this.auth.createUserWithEmailAndPassword(email,password)
+      .then(({user}) => {
+
+        const newUser = new UsuarioI(user.uid,nombre,user.email);
+
+        return this.firestore.doc(`${user.uid}/usuario`).set({...newUser});
+
+      })
   }
 
   loginUser(correo:string,password:string){
@@ -43,13 +58,13 @@ export class AuthService {
     return this.auth.signOut();
   }
 
-  isAuth(): Observable<boolean> {
+  isAuth(): boolean {
     
-    return authState(this.currentUser).pipe(
-      map((firebaseUser) => 
-      firebaseUser !== null
-      )
-    );
+    if (!this.currentUser){
+      this.router.navigate(['/login'])
+      return false
+    }
+    return true
   }
 
 
