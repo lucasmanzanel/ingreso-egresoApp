@@ -4,6 +4,10 @@ import { NgModule } from '@angular/core';
 // Modulos
 import { AppRoutingModule } from './app-routing.module';
 
+// NgRx
+import { StoreModule } from '@ngrx/store';
+import { appReducers } from './app.reducer';
+
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
@@ -23,6 +27,9 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from '../environments/environment';
 import { AngularFireAuthModule, AngularFireAuth } from '@angular/fire/compat/auth';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+
 
 
 
@@ -46,12 +53,11 @@ import { AngularFireAuthModule, AngularFireAuth } from '@angular/fire/compat/aut
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireAuthModule
-
-
-    // provideFirebaseApp(() => initializeApp(environment.firebase)),
-    // provideAuth( () => getAuth() )
-
+    AngularFireAuthModule,
+    StoreModule.forRoot(appReducers),
+    StoreDevtoolsModule.instrument({
+      logOnly: environment.production
+    })
 
   ],
   providers: [],
