@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { map, Observable } from 'rxjs';
+
+import {authState, beforeAuthStateChanged} from '@angular/fire/auth';
 
 
 @Injectable({
@@ -7,7 +10,25 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class AuthService {
 
+  currentUser;
+
   constructor(public auth:AngularFireAuth) { }
+
+
+  initAuthListener(){
+
+    this.auth.authState.subscribe( fUser => {
+
+      this.currentUser = fUser
+      console.log(fUser)
+      // console.log(fUser?.uid)
+      // console.log(fUser?.email)
+
+
+
+
+    })
+  }
 
 
   createUser(nombre:string,email:string,password:string){
@@ -21,4 +42,15 @@ export class AuthService {
   logout(){
     return this.auth.signOut();
   }
+
+  isAuth(): Observable<boolean> {
+    
+    return authState(this.currentUser).pipe(
+      map((firebaseUser) => 
+      firebaseUser !== null
+      )
+    );
+  }
+
+
 }
