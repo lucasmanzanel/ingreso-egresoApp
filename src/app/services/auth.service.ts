@@ -20,6 +20,12 @@ export class AuthService {
 
   userSubscription:any;
 
+  private _user: UsuarioI;
+
+  get user(){
+    return {...this._user};
+  }
+
   constructor(
     public auth:AngularFireAuth,
     public firestore:AngularFirestore,
@@ -42,6 +48,8 @@ export class AuthService {
 
             const user = UsuarioI.fromFirebase(firestoreUser);
 
+            this._user = user
+
             this.store.dispatch(authActions.setUser({user}));
           })
 
@@ -49,6 +57,7 @@ export class AuthService {
 
       }else{
 
+        this._user = null;
         this.userSubscription.unsubscribe();
         this.store.dispatch(authActions.unSetUser());
 

@@ -6,7 +6,7 @@ export class UsuarioI {
     }
 
     constructor(
-        public uui:string,
+        public uid:string,
         public nombre:string,
         public email:string
     ){}
