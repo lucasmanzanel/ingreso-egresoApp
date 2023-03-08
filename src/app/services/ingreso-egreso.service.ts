@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { IngresoEgresoI } from '../models/ingreso-egreso.model';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,20 @@ export class IngresoEgresoService {
       .add({...ingresoEgreso})
       // .then( (m) => console.log('EXITOSO', m))
       // .catch(err => console.warn(err))
-
   }
+
+
+  initIngresosEgresosListeener(uid:string){
+    return this.firestore.collection(`${uid}/ingresos-egresos/items`)
+      .snapshotChanges()
+
+        // .pipe(
+        //   map(snapshot => snapshot.map(doc => ({
+        //       uid: doc.payload.doc.id,
+        //       ...doc.payload.doc.data() as any
+        //     }))
+        //   )
+        // )
+    }
+
 }
