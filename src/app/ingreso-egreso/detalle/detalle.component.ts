@@ -3,6 +3,8 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { AppState } from '../../app.reducer';
 import { IngresoEgresoI } from '../../models/ingreso-egreso.model';
+import { IngresoEgresoService } from '../../services/ingreso-egreso.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-detalle',
@@ -15,7 +17,8 @@ export class DetalleComponent implements OnInit, OnDestroy {
   ingresosSub:Subscription;
 
   constructor(
-    private store:Store<AppState>
+    private store:Store<AppState>,
+    private ingresoEgresoService:IngresoEgresoService
   ) { }
 
   ngOnInit() {
@@ -33,7 +36,9 @@ export class DetalleComponent implements OnInit, OnDestroy {
   }
 
   borrar(id){
-    console.log(id)
+    this.ingresoEgresoService.borrarIngresoEgreso(id)
+      .then(() => Swal.fire(`Borrado con exito`,'','success'))
+      .catch((info) => Swal.fire(`${info.message}`,'','error'))
   }
 
 }

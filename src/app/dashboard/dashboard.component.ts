@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../app.reducer';
-import * as ingresoEgresoActios from '../ingreso-egreso/ingreso-egreso.actions';
-
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
+import { AppState } from '../app.reducer';
+import { setItems } from '../ingreso-egreso/ingreso-egreso.actions';
 import { IngresoEgresoService } from '../services/ingreso-egreso.service';
 
 @Component({
@@ -15,8 +13,9 @@ import { IngresoEgresoService } from '../services/ingreso-egreso.service';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  userSubs$:Subscription;
-  ingresosSub$:Subscription;
+  userSubs:Subscription;
+
+  ingresosSubs:any;
 
   constructor(
     private store:Store<AppState>,
@@ -25,21 +24,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.userSubs$ = this.store.select('user')
+    this.userSubs = this.store.select('user')
     .pipe(
       filter(auth => auth.user != null)
     )
-    .subscribe((user:any) =>{ 
-      this.ingresoEgreso.initIngresosEgresosListeener(user.user.uid)
+    .subscribe(({user}) =>{
+      
+      this.ingresosSubs = this.ingresoEgreso.initIngresosEgresosListeener(user.uid)
         .subscribe((ingresosEgresos:any) => {
-          this.store.dispatch(ingresoEgresoActios.setItems({items: ingresosEgresos}))
+          this.store.dispatch(setItems({items:ingresosEgresos}))
+        
         })
     })
   }
 
   ngOnDestroy(): void {
 
-    this.userSubs$.unsubscribe();
+    this.ingresosSubs.unsubscribe();
+
+    this.userSubs.unsubscribe();
+
+
     
   }
 

@@ -16,12 +16,12 @@ export class IngresoEgresoService {
 
   crearIngresoEgreso(ingresoEgreso:IngresoEgresoI){
 
-    // const uid = this.authService.user.uid as string;
+    const uid = this.authService.user.uid as string;
 
     // return this.firestore.collection(`${uid}/ingresos-egresos/Items`).add({...ingresoEgreso})
     //   .catch(e => console.log(e))
 
-    return this.firestore.doc(`${this.authService.user.uid}/ingresos-egresos`)
+    return this.firestore.doc(`${uid}/ingresos-egresos`)
       .collection('items')
       .add({...ingresoEgreso})
       // .then( (m) => console.log('EXITOSO', m))
@@ -40,6 +40,13 @@ export class IngresoEgresoService {
         //     }))
         //   )
         // )
+    };
+
+
+    borrarIngresoEgreso(uiItem:string){
+      const uid = this.authService.user.uid as string;
+
+      return this.firestore.doc(`${uid}/ingresos-egresos/items/${uiItem}`).delete()
     }
 
 }
