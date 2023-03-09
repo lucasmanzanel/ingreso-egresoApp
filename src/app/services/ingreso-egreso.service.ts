@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { IngresoEgresoI } from '../models/ingreso-egreso.model';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators'
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,8 @@ export class IngresoEgresoService {
 
   initIngresosEgresosListeener(uid:string){
     return this.firestore.collection(`${uid}/ingresos-egresos/items`)
-      .snapshotChanges()
-
+    .valueChanges({ idField: 'uid' })
+      // .snapshotChanges()
         // .pipe(
         //   map(snapshot => snapshot.map(doc => ({
         //       uid: doc.payload.doc.id,
